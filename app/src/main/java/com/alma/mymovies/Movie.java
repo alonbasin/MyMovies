@@ -8,10 +8,9 @@ import android.os.Parcelable;
  */
 public class Movie implements Parcelable {
 
-    public String mTitle, mPoster, mOverview, mReleaseDate;
-    public double mVoteAverage;
+    public String mTitle, mPoster, mOverview, mReleaseDate, mVoteAverage;
 
-    public Movie(String title, String poster, String overview, String releaseDate, double voteAverage) {
+    public Movie(String title, String poster, String overview, String releaseDate, String voteAverage) {
         mTitle = title;
         mPoster = poster;
         mOverview = overview;
@@ -24,7 +23,7 @@ public class Movie implements Parcelable {
         mPoster = in.readString();
         mOverview = in.readString();
         mReleaseDate = in.readString();
-        mVoteAverage = in.readDouble();
+        mVoteAverage = in.readString();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -50,7 +49,7 @@ public class Movie implements Parcelable {
         dest.writeString(mPoster);
         dest.writeString(mOverview);
         dest.writeString(mReleaseDate);
-        dest.writeDouble(mVoteAverage);
+        dest.writeString(mVoteAverage);
     }
 
     @Override

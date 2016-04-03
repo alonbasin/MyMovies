@@ -37,8 +37,6 @@ public class GridAdapter extends ArrayAdapter<Movie> {
 
         Picasso.with(mContext)
                 .load(movie.mPoster)
-                .noFade().resize(150,150)
-                .centerCrop()
                 .into(imageView);
 
         return imageView;
