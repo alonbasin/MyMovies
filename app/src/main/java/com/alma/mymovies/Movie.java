@@ -8,12 +8,33 @@ import android.os.Parcelable;
  */
 public class Movie implements Parcelable {
 
-    public String mTitle, mPoster, mOverview, mReleaseDate;
-    public double mVoteAverage;
+    public String mTitle, mPoster, mOverview, mReleaseDate, mVoteAverage;
 
-    public Movie(String title, String poster, String overview, String releaseDate, double voteAverage) {
+    private final String POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
+    private StringBuilder sb = new StringBuilder(POSTER_BASE_URL);
+
+    public enum PosterWidth {
+        WIDTH185 ("w185"),
+        WIDTH500 ("w500");
+
+        private final String posterWidth;
+
+        private PosterWidth(String s) {
+            posterWidth = s;
+        }
+
+        public boolean equalsName(String otherName) {
+            return (otherName == null) ? false : posterWidth.equals(otherName);
+        }
+
+        public String toString() {
+            return this.posterWidth;
+        }
+    }
+
+    public Movie(String title, String poster, String overview, String releaseDate, String voteAverage) {
         mTitle = title;
-        mPoster = poster;
+        mPoster = sb.append(PosterWidth.WIDTH185).append(poster).toString();
         mOverview = overview;
         mReleaseDate = releaseDate;
         mVoteAverage = voteAverage;
@@ -24,7 +45,7 @@ public class Movie implements Parcelable {
         mPoster = in.readString();
         mOverview = in.readString();
         mReleaseDate = in.readString();
-        mVoteAverage = in.readDouble();
+        mVoteAverage = in.readString();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -50,7 +71,7 @@ public class Movie implements Parcelable {
         dest.writeString(mPoster);
         dest.writeString(mOverview);
         dest.writeString(mReleaseDate);
-        dest.writeDouble(mVoteAverage);
+        dest.writeString(mVoteAverage);
     }
 
     @Override
