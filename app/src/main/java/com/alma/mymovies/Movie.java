@@ -2,6 +2,7 @@ package com.alma.mymovies;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 /**
  * Created by Alon on 4/2/2016.
@@ -9,6 +10,27 @@ import android.os.Parcelable;
 public class Movie implements Parcelable {
 
     public String mTitle, mPoster, mOverview, mReleaseDate, mVoteAverage;
+
+    private final String POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
+
+    public enum PosterWidth {
+        WIDTH185 ("w185"),
+        WIDTH500 ("w500");
+
+        private final String posterWidth;
+
+        private PosterWidth(String s) {
+            posterWidth = s;
+        }
+
+        public boolean equalsName(String otherName) {
+            return (otherName == null) ? false : posterWidth.equals(otherName);
+        }
+
+        public String toString() {
+            return this.posterWidth;
+        }
+    }//w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg
 
     public Movie(String title, String poster, String overview, String releaseDate, String voteAverage) {
         mTitle = title;

@@ -164,11 +164,6 @@ public class MainFragment extends Fragment {
             JSONArray moviesJsonArray = moviesJson.getJSONArray(API_RESULTS);
 
             for (int i = 0; i < moviesJsonArray.length(); i++) {
-//            String title;
-//            String poster;
-//            String overview;
-//            String releaseDate;
-//            Double voteAverage;
 
                 JSONObject movieJsonObject = moviesJsonArray.getJSONObject(i);
                 String title = movieJsonObject.getString(MOVIE_TITLE);
