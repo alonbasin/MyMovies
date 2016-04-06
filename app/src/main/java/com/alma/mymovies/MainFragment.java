@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -38,20 +41,12 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
         if (savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
             FetchDataTask dataTask = new FetchDataTask();
-            dataTask.execute();
-            //dummy
-//            mMovieList = new ArrayList<>();
-//            for (int i = 0; i < 5; i++) {
-//                Movie movie = new Movie("title"
-//                        , "http://image.tmdb.org/t/p/w185/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg"
-//                        , "overview"
-//                        , "release"
-//                        , 15.5);
-//                mMovieList.add(movie);
-//                Log.d("my movie",movie.toString());
-//            }
+            dataTask.execute(RequestType.POPULAR_REQUEST);
+
         } else {
             mMovieList = savedInstanceState.getParcelableArrayList("movies");
         }
@@ -71,12 +66,27 @@ public class MainFragment extends Fragment {
         return rootView;
     }
 
-    private class FetchDataTask extends AsyncTask<Void, Void, ArrayList<Movie>> {
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_main_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.actio_settings) {
+//            startActivity(new Intent(this, SettingsActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private class FetchDataTask extends AsyncTask<RequestType, Void, ArrayList<Movie>> {
 
         private final String LOG_TAG = FetchDataTask.class.getSimpleName();
 
         @Override
-        protected ArrayList<Movie> doInBackground(Void... params) {
+        protected ArrayList<Movie> doInBackground(RequestType... params) {
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -85,11 +95,11 @@ public class MainFragment extends Fragment {
 
             try {
                 final String MOVIES_BASE_URL = "http://api.themoviedb.org/3/movie/";
-                final String POPULAR_REQUEST = "popular";
+                final String REQUEST_TYPE = String.valueOf(params);
                 final String API_KRY_PARAM = "api_key";
 
                 Uri popularMoviesUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
-                        .appendPath(POPULAR_REQUEST)
+                        .appendPath(REQUEST_TYPE)
                         .appendQueryParameter(API_KRY_PARAM, BuildConfig.MOVIES_API_KEY)
                         .build();
 
@@ -184,6 +194,25 @@ public class MainFragment extends Fragment {
                 }
             });
 
+        }
+    }
+
+    public enum RequestType {
+        POPULAR_REQUEST ("popular"),
+        TOP_RATED_REQUEST ("top_rated");
+
+        private final String requestType;
+
+        private RequestType(String s) {
+            requestType = s;
+        }
+
+        public boolean equalsName(String otherName) {
+            return (otherName == null) ? false : requestType.equals(otherName);
+        }
+
+        public String toString() {
+            return this.requestType;
         }
     }
 

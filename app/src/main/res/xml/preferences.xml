@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:title="@string/request_type_label"
+        android:key="@string/request_type_key"
+        android:summaryOff="@string/request_type_false"
+        android:summaryOn="@string/request_type_true"
+        android:defaultValue="@string/request_type_default" />
+
+</PreferenceScreen>
