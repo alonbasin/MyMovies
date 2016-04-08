@@ -1,9 +1,12 @@
 package com.alma.mymovies;
 
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,9 +33,13 @@ import java.util.ArrayList;
 
 public class MainFragment extends Fragment {
 
+    private static final String POPULAR_REQUEST = "popular";
+    private static final String TOP_RATED_REQUEST = "top_rated";
+
     private GridView mGridView;
     private GridAdapter mGridAdapter;
     private ArrayList<Movie> mMovieList;
+    private String requestType;
 
     public MainFragment() {
 
@@ -44,8 +51,11 @@ public class MainFragment extends Fragment {
         setHasOptionsMenu(true);
 
         if (savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            requestType = preferences.getString("requestType", POPULAR_REQUEST);
+
             FetchDataTask dataTask = new FetchDataTask();
-            dataTask.execute(RequestType.POPULAR_REQUEST);
+            dataTask.execute(requestType);
 
         } else {
             mMovieList = savedInstanceState.getParcelableArrayList("movies");
@@ -74,19 +84,31 @@ public class MainFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.actio_settings) {
-//            startActivity(new Intent(this, SettingsActivity.class));
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(getActivity(), SettingsActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private class FetchDataTask extends AsyncTask<RequestType, Void, ArrayList<Movie>> {
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        requestType = preferences.getString("requestType", POPULAR_REQUEST);
+
+        FetchDataTask dataTask = new FetchDataTask();
+        dataTask.execute(requestType);
+    }
+
+    private class FetchDataTask extends AsyncTask<String, Void, ArrayList<Movie>> {
 
         private final String LOG_TAG = FetchDataTask.class.getSimpleName();
 
         @Override
-        protected ArrayList<Movie> doInBackground(RequestType... params) {
+        protected ArrayList<Movie> doInBackground(String... params) {
+
+            String requestType = params[0];
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -95,7 +117,7 @@ public class MainFragment extends Fragment {
 
             try {
                 final String MOVIES_BASE_URL = "http://api.themoviedb.org/3/movie/";
-                final String REQUEST_TYPE = String.valueOf(params);
+                final String REQUEST_TYPE = requestType;
                 final String API_KRY_PARAM = "api_key";
 
                 Uri popularMoviesUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
@@ -104,6 +126,7 @@ public class MainFragment extends Fragment {
                         .build();
 
                 URL url = new URL(popularMoviesUri.toString());
+                Log.d("url", url.toString());
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
@@ -190,30 +213,28 @@ public class MainFragment extends Fragment {
             mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                    Intent intent = new Intent(getActivity(), DetailsActivity.class);
+                    intent.putExtra("selected_movie", mMovieList.get(position));
+                    startActivity(intent);
                 }
             });
 
         }
     }
 
-    public enum RequestType {
-        POPULAR_REQUEST ("popular"),
-        TOP_RATED_REQUEST ("top_rated");
-
-        private final String requestType;
-
-        private RequestType(String s) {
-            requestType = s;
-        }
-
-        public boolean equalsName(String otherName) {
-            return (otherName == null) ? false : requestType.equals(otherName);
-        }
-
-        public String toString() {
-            return this.requestType;
-        }
-    }
+//    public enum RequestType {
+//        POPULAR_REQUEST ("popular"),
+//        TOP_RATED_REQUEST ("top_rated");
+//
+//        private final String requestType;
+//
+//        private RequestType(String s) {
+//            requestType = s;
+//        }
+//
+//        public String toString() {
+//            return requestType;
+//        }
+//    }
 
 }

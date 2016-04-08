@@ -28,7 +28,7 @@ public class Movie implements Parcelable {
         }
 
         public String toString() {
-            return this.posterWidth;
+            return posterWidth;
         }
     }
 
