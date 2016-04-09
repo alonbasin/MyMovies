@@ -8,7 +8,7 @@ import android.os.Parcelable;
  */
 public class Movie implements Parcelable {
 
-    public String mTitle, mPoster, mOverview, mReleaseDate, mVoteAverage;
+    public String mId, mTitle, mPoster, mOverview, mReleaseDate, mVoteAverage;
 
     private final String POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
     private StringBuilder sb = new StringBuilder(POSTER_BASE_URL);
@@ -23,16 +23,13 @@ public class Movie implements Parcelable {
             posterWidth = s;
         }
 
-        public boolean equalsName(String otherName) {
-            return (otherName == null) ? false : posterWidth.equals(otherName);
-        }
-
         public String toString() {
             return posterWidth;
         }
     }
 
-    public Movie(String title, String poster, String overview, String releaseDate, String voteAverage) {
+    public Movie(String id, String title, String poster, String overview, String releaseDate, String voteAverage) {
+        mId = id;
         mTitle = title;
         mPoster = sb.append(PosterWidth.WIDTH185).append(poster).toString();
         mOverview = overview;
@@ -41,6 +38,7 @@ public class Movie implements Parcelable {
     }
 
     protected Movie(Parcel in) {
+        mId = in.readString();
         mTitle = in.readString();
         mPoster = in.readString();
         mOverview = in.readString();
@@ -67,6 +65,7 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mId);
         dest.writeString(mTitle);
         dest.writeString(mPoster);
         dest.writeString(mOverview);
@@ -77,6 +76,7 @@ public class Movie implements Parcelable {
     @Override
     public String toString() {
         return "Movie{" +
+                "mId='" + mId +'\'' +
                 "mTitle='" + mTitle + '\'' +
                 ", mPoster='" + mPoster + '\'' +
                 ", mOverview='" + mOverview + '\'' +

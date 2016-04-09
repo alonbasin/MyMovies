@@ -1,6 +1,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+    >
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
@@ -23,7 +24,7 @@
             android:paddingBottom="32dp"
             android:paddingLeft="16dp"
             android:background="@color/accent_material_light"
-            android:textSize="50sp"
+            android:textSize="40sp"
             android:textColor="@android:color/background_light"/>
 
     </LinearLayout>
@@ -68,7 +69,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/votsTextView"
-                android:textSize="25sp"/>
+                android:textSize="25sp"
+                android:layout_marginTop="5dp"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mark As Favorite"
+                android:id="@+id/favorite_button"
+                android:background="@color/accent_material_dark"
+                android:padding="3dp"
+                android:textSize="15sp"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginTop="10dp"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -86,6 +99,34 @@
             android:layout_height="wrap_content"
             android:id="@+id/overviewTextView"
             android:textSize="15sp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/colorPrimary"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"/>
+
+    <LinearLayout
+        android:id="@+id/trailers_layout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Trailers:"
+            android:paddingLeft="25dp"
+            android:textSize="25sp"/>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/trailers_listView"/>
     </LinearLayout>
 
 </LinearLayout>

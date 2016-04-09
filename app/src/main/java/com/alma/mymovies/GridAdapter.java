@@ -1,8 +1,10 @@
 package com.alma.mymovies;
 
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
@@ -16,11 +18,18 @@ import java.util.List;
 public class GridAdapter extends ArrayAdapter<Movie> {
 
     private static final String LOG_TAG = GridAdapter.class.getSimpleName();
+
     private Context mContext;
+    private DisplayMetrics displaymetrics;
+    private WindowManager windowManager;
+    private int height;
+    private int width;
+
 
     public GridAdapter(Context context, List<Movie> moviesList) {
         super(context, 0, moviesList);
         mContext = context;
+        getScreenMeasures();
     }
 
     @Override
@@ -37,7 +46,7 @@ public class GridAdapter extends ArrayAdapter<Movie> {
 
         Picasso.with(mContext)
                 .load(movie.mPoster)
-                .resize(700, 1000)
+                .resize(width / 2, height / 2)
                 .into(imageView);
 
         return imageView;
@@ -46,5 +55,13 @@ public class GridAdapter extends ArrayAdapter<Movie> {
     @Override
     public Movie getItem(int position) {
         return super.getItem(position);
+    }
+
+    public void getScreenMeasures() {
+        displaymetrics = new DisplayMetrics();
+        windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        windowManager.getDefaultDisplay().getMetrics(displaymetrics);
+        height = displaymetrics.heightPixels;
+        width = displaymetrics.widthPixels;
     }
 }

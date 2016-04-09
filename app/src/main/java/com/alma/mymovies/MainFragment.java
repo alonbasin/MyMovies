@@ -120,12 +120,12 @@ public class MainFragment extends Fragment {
                 final String REQUEST_TYPE = requestType;
                 final String API_KRY_PARAM = "api_key";
 
-                Uri popularMoviesUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
+                Uri moviesUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
                         .appendPath(REQUEST_TYPE)
                         .appendQueryParameter(API_KRY_PARAM, BuildConfig.MOVIES_API_KEY)
                         .build();
 
-                URL url = new URL(popularMoviesUri.toString());
+                URL url = new URL(moviesUri.toString());
                 Log.d("url", url.toString());
 
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -177,6 +177,7 @@ public class MainFragment extends Fragment {
         private ArrayList<Movie> getMoviesListFromJson(String moviesJsonStr) throws JSONException{
 
             final String API_RESULTS = "results";
+            final String MOVIE_ID = "id";
             final String MOVIE_TITLE = "title";
             final String MOVIE_POSTER = "poster_path";
             final String MOVIE_OVERVIEW = "overview";
@@ -191,13 +192,14 @@ public class MainFragment extends Fragment {
             for (int i = 0; i < moviesJsonArray.length(); i++) {
 
                 JSONObject movieJsonObject = moviesJsonArray.getJSONObject(i);
+                String id = movieJsonObject.getString(MOVIE_ID);
                 String title = movieJsonObject.getString(MOVIE_TITLE);
                 String poster = movieJsonObject.getString(MOVIE_POSTER);
                 String overview = movieJsonObject.getString(MOVIE_OVERVIEW);
                 String releaseDate = movieJsonObject.getString(MOVIE_RELEASE_DATE);
                 String voteAverage = movieJsonObject.getString(MOVIE_VOTE_AVERAGE);
 
-                Movie movie = new Movie(title, poster, overview, releaseDate, voteAverage);
+                Movie movie = new Movie(id, title, poster, overview, releaseDate, voteAverage);
                 moviesList.add(movie);
             }
             return moviesList;
@@ -218,8 +220,8 @@ public class MainFragment extends Fragment {
                     startActivity(intent);
                 }
             });
-
         }
+
     }
 
 //    public enum RequestType {
