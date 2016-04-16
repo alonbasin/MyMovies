@@ -1,10 +1,13 @@
-package com.alma.mymovies;
+package com.alma.mymovies.data;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+
+import com.alma.mymovies.BuildConfig;
+import com.alma.mymovies.Movie;
 
 import org.json.JSONArray;
 import org.json.JSONException;

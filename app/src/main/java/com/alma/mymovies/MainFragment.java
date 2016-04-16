@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.alma.mymovies.data.FetchMoviesTask;
+
 import java.util.ArrayList;
 
 
@@ -59,9 +61,6 @@ public class MainFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                FetchMovieInfoTask fetchMovieInfoTask = new FetchMovieInfoTask();
-                fetchMovieInfoTask.execute(mMovieList.get(position));
-
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
                 intent.putExtra("selected_movie", mMovieList.get(position));
                 startActivity(intent);
