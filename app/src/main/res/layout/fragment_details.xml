@@ -1,13 +1,13 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.alma.mymovies.DetailsFragment">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              tools:context="com.alma.mymovies.DetailsFragment"
-              android:orientation="vertical">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
         android:orientation="vertical"
@@ -123,12 +123,22 @@
             android:text="Trailers:"
             android:textSize="25sp"/>
 
-        <ListView
+        <com.alma.mymovies.ExpandedListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/trailers_listView"
             android:scrollbars="none"/>
+
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/colorPrimary"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"/>
 
     <LinearLayout
         android:orientation="vertical"
@@ -154,3 +164,4 @@
 </LinearLayout>
 
 </ScrollView>
+

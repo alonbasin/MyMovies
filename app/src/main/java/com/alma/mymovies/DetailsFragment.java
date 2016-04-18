@@ -2,6 +2,7 @@ package com.alma.mymovies;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -86,6 +89,22 @@ public class DetailsFragment extends Fragment {
         mTrailersListView = (ListView) view.findViewById(R.id.trailers_listView);
         mTrailersListView.setAdapter(trailersAdapter);
 
+        mTrailersListView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
+        mTrailersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(mTrailersList.get(position).mTrailerUrl)));
+
+            }
+        });
 
         //reviews
         mReviewsList = new ArrayList<>();
@@ -118,5 +137,6 @@ public class DetailsFragment extends Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 }

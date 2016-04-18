@@ -29,9 +29,9 @@ public class FetchMovieTrailersTask extends AsyncTask<Movie, Void, ArrayList<Tra
 
     private final String LOG_TAG = FetchMovieTrailersTask.class.getSimpleName();
 
-    private ArrayAdapter<Trailer> mTrailersAdapter;
-    private final Context mContext;
-    private LinearLayout trailersLayout;
+    protected ArrayAdapter<Trailer> mTrailersAdapter;
+    protected Context mContext;
+    protected LinearLayout trailersLayout;
 
     public FetchMovieTrailersTask(Context context, ArrayAdapter<Trailer> trailerAdapter, View rootView) {
         mTrailersAdapter = trailerAdapter;
