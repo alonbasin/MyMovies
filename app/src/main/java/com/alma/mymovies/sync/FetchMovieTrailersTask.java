@@ -1,4 +1,4 @@
-package com.alma.mymovies.data;
+package com.alma.mymovies.sync;
 
 
 import android.content.Context;

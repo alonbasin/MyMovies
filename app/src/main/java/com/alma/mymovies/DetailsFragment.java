@@ -20,8 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.alma.mymovies.data.FetchMovieReviewsTask;
-import com.alma.mymovies.data.FetchMovieTrailersTask;
+import com.alma.mymovies.sync.FetchMovieReviewsTask;
+import com.alma.mymovies.sync.FetchMovieTrailersTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

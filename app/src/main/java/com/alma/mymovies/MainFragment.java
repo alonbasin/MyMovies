@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.alma.mymovies.data.FetchMoviesTask;
+import com.alma.mymovies.sync.FetchMoviesTask;
 
 import java.util.ArrayList;
 
