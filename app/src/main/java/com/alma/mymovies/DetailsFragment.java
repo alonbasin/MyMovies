@@ -1,6 +1,7 @@
 package com.alma.mymovies;
 
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,11 +21,14 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.alma.mymovies.data.FavoriteMoviesContract;
+import com.alma.mymovies.data.FavoriteMoviesProvider;
 import com.alma.mymovies.sync.FetchMovieReviewsTask;
 import com.alma.mymovies.sync.FetchMovieTrailersTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 
 public class DetailsFragment extends Fragment {
@@ -137,6 +141,5 @@ public class DetailsFragment extends Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 }
