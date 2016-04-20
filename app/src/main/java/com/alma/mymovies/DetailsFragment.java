@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,25 +17,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alma.mymovies.data.FavoriteMoviesContract;
-import com.alma.mymovies.data.FavoriteMoviesProvider;
+import com.alma.mymovies.data.FavoriteMoviesDbHelper;
 import com.alma.mymovies.sync.FetchMovieReviewsTask;
 import com.alma.mymovies.sync.FetchMovieTrailersTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
 
 public class DetailsFragment extends Fragment {
 
     private Movie mMovie;
     protected TextView mTitleTextView, mReleaseDateTextView, mVotesTextView ,mOverviewTextView;
+    protected Button mFavoriteButton;
     protected LinearLayout mReviewsLayout, mTrailersLayout;
     protected ImageView mPosterImageView;
     protected ListView mTrailersListView, mReviewsListView;
@@ -75,6 +78,21 @@ public class DetailsFragment extends Fragment {
 
         mVotesTextView = (TextView) view.findViewById(R.id.votsTextView);
         mVotesTextView.setText(mMovie.mVoteAverage);
+
+        mFavoriteButton = (Button) view.findViewById(R.id.favorite_button);
+        mFavoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FavoriteMoviesDbHelper dbHelper = new FavoriteMoviesDbHelper(getActivity());
+                if (dbHelper.isFavorite(mMovie.mId)) {
+                    dbHelper.deleteFavoriteMovie(mMovie.mId);
+                    Toast.makeText(getActivity(), "Deleted from favorites!", Toast.LENGTH_SHORT).show();
+                } else {
+                    dbHelper.insertFavoriteMovie(mMovie.mId, mMovie.mTitle, mMovie.mOverview, mMovie.mPoster, mMovie.mReleaseDate, mMovie.mVoteAverage);
+                    Toast.makeText(getActivity(), "Added to favorites!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         mOverviewTextView = (TextView) view.findViewById(R.id.overviewTextView);
         mOverviewTextView.setText(mMovie.mOverview);

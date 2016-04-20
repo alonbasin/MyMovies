@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 
 import com.alma.mymovies.BuildConfig;
 import com.alma.mymovies.Movie;
+import com.alma.mymovies.data.FavoriteMoviesDbHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,64 +48,72 @@ public class FetchMoviesTask extends AsyncTask<String, Void, ArrayList<Movie>> {
 
         String moviesJsonStr = null;
 
-        try {
-            final String MOVIES_BASE_URL = "http://api.themoviedb.org/3/movie/";
-            final String REQUEST_TYPE = requestType;
-            final String API_KRY_PARAM = "api_key";
+        if (requestType.equals("favorites")) {
+            FavoriteMoviesDbHelper dbHelper = new FavoriteMoviesDbHelper(mContext);
+            ArrayList<Movie> movies = dbHelper.getAllFavoriteMovies();
+            Log.d("favoriteMoviesList", String.valueOf(movies));
+            return movies;
+        } else {
+            try {
+                final String MOVIES_BASE_URL = "http://api.themoviedb.org/3/movie/";
+                final String REQUEST_TYPE = requestType;
+                final String API_KRY_PARAM = "api_key";
 
-            Uri moviesUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
-                    .appendPath(REQUEST_TYPE)
-                    .appendQueryParameter(API_KRY_PARAM, BuildConfig.MOVIES_API_KEY)
-                    .build();
+                Uri moviesUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
+                        .appendPath(REQUEST_TYPE)
+                        .appendQueryParameter(API_KRY_PARAM, BuildConfig.MOVIES_API_KEY)
+                        .build();
 
-            URL url = new URL(moviesUri.toString());
-            Log.d("url", url.toString());
+                URL url = new URL(moviesUri.toString());
+                Log.d("url", url.toString());
 
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
 
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuffer buffer = new StringBuffer();
-            if (inputStream == null) {
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    return null;
+                }
+
+                moviesJsonStr = buffer.toString();
+
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "Error ", e);
                 return null;
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line + "\n");
-            }
-
-            if (buffer.length() == 0) {
-                return null;
-            }
-
-            moviesJsonStr = buffer.toString();
-
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error ", e);
-            return null;
-        } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException e) {
-                    Log.e(LOG_TAG, "Error closing stream", e);
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e(LOG_TAG, "Error closing stream", e);
+                    }
                 }
             }
+
+            try {
+                return getMoviesListFromJson(moviesJsonStr);
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+                e.printStackTrace();
+            }
+            return null;
         }
 
-        try {
-            return getMoviesListFromJson(moviesJsonStr);
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-            e.printStackTrace();
-        }
-        return null;
     }
 
     private ArrayList<Movie> getMoviesListFromJson(String moviesJsonStr) throws JSONException{

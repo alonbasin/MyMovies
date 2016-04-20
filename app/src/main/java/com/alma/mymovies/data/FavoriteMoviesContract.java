@@ -30,8 +30,8 @@ public class FavoriteMoviesContract implements BaseColumns{
     public static final String COLUMN_OVERVIEW = "overview";
     public static final String COLUMN_RELEASE_DATE = "release_date";
     public static final String COLUMN_VOTE_AVERAGE = "vote_average";
-
-    public static Uri buildFavoriteMoviesUri(long id) {
-        return ContentUris.withAppendedId(CONTENT_URI, id);
-    }
+//
+//    public static Uri buildFavoriteMoviesUri(long id) {
+//        return ContentUris.withAppendedId(CONTENT_URI, id);
+//    }
 }

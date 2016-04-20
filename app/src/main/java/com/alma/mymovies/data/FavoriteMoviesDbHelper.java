@@ -11,6 +11,8 @@ import com.alma.mymovies.Movie;
 
 import java.util.ArrayList;
 
+import static com.alma.mymovies.data.FavoriteMoviesContract.*;
+
 /**
  * Created by Alon on 4/18/2016.
  */
@@ -27,15 +29,14 @@ public class FavoriteMoviesDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        final String SQL_CREATE_FAVORITE_MOVIES_TABLE = "CREATE TABLE " + FavoriteMoviesContract.TABLE_NAME + " (" +
-                FavoriteMoviesContract._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-
-                FavoriteMoviesContract.COLUMN_ID + " TEXT NOT NULL, " +
-                FavoriteMoviesContract.COLUMN_TITLE + " TEXT NOT NULL, " +
-                FavoriteMoviesContract.COLUMN_OVERVIEW + " TEXT NOT NULL, " +
-                FavoriteMoviesContract.COLUMN_POSTER_URL + " TEXT NOT NULL, " +
-                FavoriteMoviesContract.COLUMN_RELEASE_DATE + " TEXT NOT NULL, " +
-                FavoriteMoviesContract.COLUMN_VOTE_AVERAGE + " TEXT NOT NULL " +
+        final String SQL_CREATE_FAVORITE_MOVIES_TABLE = "CREATE TABLE " + TABLE_NAME + " (" +
+//                _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                COLUMN_ID + " TEXT NOT NULL, " +
+                COLUMN_TITLE + " TEXT NOT NULL, " +
+                COLUMN_OVERVIEW + " TEXT NOT NULL, " +
+                COLUMN_POSTER_URL + " TEXT NOT NULL, " +
+                COLUMN_RELEASE_DATE + " TEXT NOT NULL, " +
+                COLUMN_VOTE_AVERAGE + " TEXT NOT NULL " +
                 " );";
 
         db.execSQL(SQL_CREATE_FAVORITE_MOVIES_TABLE);
@@ -43,23 +44,24 @@ public class FavoriteMoviesDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + FavoriteMoviesContract.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
     }
 
-    private boolean insertFavoriteMovie(String id, String title, String overview, String poster, String releaseDate, String voteAverage) {
+    public boolean insertFavoriteMovie(String id, String title, String overview, String poster, String releaseDate, String voteAverage) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues favoriteMovieValues = new ContentValues();
 
-        favoriteMovieValues.put(FavoriteMoviesContract.COLUMN_ID, id);
-        favoriteMovieValues.put(FavoriteMoviesContract.COLUMN_TITLE, title);
-        favoriteMovieValues.put(FavoriteMoviesContract.COLUMN_OVERVIEW, overview);
-        favoriteMovieValues.put(FavoriteMoviesContract.COLUMN_POSTER_URL, poster);
-        favoriteMovieValues.put(FavoriteMoviesContract.COLUMN_RELEASE_DATE, releaseDate);
-        favoriteMovieValues.put(FavoriteMoviesContract.COLUMN_VOTE_AVERAGE, voteAverage);
+        favoriteMovieValues.put(COLUMN_ID, id);
+        favoriteMovieValues.put(COLUMN_TITLE, title);
+        favoriteMovieValues.put(COLUMN_OVERVIEW, overview);
+        String posterKey = poster;
+        favoriteMovieValues.put(COLUMN_POSTER_URL, poster);
+        favoriteMovieValues.put(COLUMN_RELEASE_DATE, releaseDate);
+        favoriteMovieValues.put(COLUMN_VOTE_AVERAGE, voteAverage);
 
-        db.insert(FavoriteMoviesContract.TABLE_NAME, null, favoriteMovieValues);
+        db.insert(TABLE_NAME, null, favoriteMovieValues);
         db.close();
 
         return true;
@@ -67,7 +69,7 @@ public class FavoriteMoviesDbHelper extends SQLiteOpenHelper {
 
     public Cursor getData(String id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery("SELECT * from " + FavoriteMoviesContract.TABLE_NAME + " WHERE " + FavoriteMoviesContract.COLUMN_ID + "=" + id, null);
+        Cursor res =  db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + "=" + id, null);
         db.close();
 
         return res;
@@ -75,15 +77,15 @@ public class FavoriteMoviesDbHelper extends SQLiteOpenHelper {
 
     public int numberOfRows() {
         SQLiteDatabase db = this.getReadableDatabase();
-        int numRows = (int) DatabaseUtils.queryNumEntries(db, FavoriteMoviesContract.TABLE_NAME);
+        int numRows = (int) DatabaseUtils.queryNumEntries(db, TABLE_NAME);
         db.close();
 
         return numRows;
     }
 
-    public boolean deleteContact (String id) {
+    public boolean deleteFavoriteMovie (String id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(FavoriteMoviesContract.TABLE_NAME, FavoriteMoviesContract.COLUMN_ID + "=" + id, null);
+        db.delete(TABLE_NAME, COLUMN_ID + "=" + id, null);
         db.close();
 
         return true;
@@ -93,17 +95,16 @@ public class FavoriteMoviesDbHelper extends SQLiteOpenHelper {
         ArrayList<Movie> movies = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery("SELECT * from " + FavoriteMoviesContract.TABLE_NAME, null);
+        Cursor res =  db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
 
         while(res.moveToNext()){
-            String id, title, overview, poster, releaseDate, voteAverage;
 
-            id = res.getString(res.getColumnIndex(FavoriteMoviesContract.COLUMN_ID));
-            title = res.getString(res.getColumnIndex(FavoriteMoviesContract.COLUMN_TITLE));
-            overview = res.getString(res.getColumnIndex(FavoriteMoviesContract.COLUMN_OVERVIEW));
-            poster = res.getString(res.getColumnIndex(FavoriteMoviesContract.COLUMN_POSTER_URL));
-            releaseDate = res.getString(res.getColumnIndex(FavoriteMoviesContract.COLUMN_RELEASE_DATE));
-            voteAverage = res.getString(res.getColumnIndex(FavoriteMoviesContract.COLUMN_VOTE_AVERAGE));
+            String id = res.getString(res.getColumnIndex(COLUMN_ID));
+            String title = res.getString(res.getColumnIndex(COLUMN_TITLE));
+            String overview = res.getString(res.getColumnIndex(COLUMN_OVERVIEW));
+            String poster = res.getString(res.getColumnIndex(COLUMN_POSTER_URL));
+            String releaseDate = res.getString(res.getColumnIndex(COLUMN_RELEASE_DATE));
+            String voteAverage = res.getString(res.getColumnIndex(COLUMN_VOTE_AVERAGE));
 
             Movie movie = new Movie(id, title, overview, poster, releaseDate, voteAverage);
             movies.add(movie);
@@ -113,5 +114,16 @@ public class FavoriteMoviesDbHelper extends SQLiteOpenHelper {
         db.close();
 
         return movies;
+    }
+
+    public boolean isFavorite(String id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + " = " + id, null);
+//        c.close();
+//        db.close();
+
+        if (c.getCount() > 0)
+            return true;
+        else return false;
     }
 }
