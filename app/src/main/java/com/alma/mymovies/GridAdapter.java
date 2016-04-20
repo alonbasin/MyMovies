@@ -45,7 +45,7 @@ public class GridAdapter extends ArrayAdapter<Movie> {
         }
 
         Picasso.with(mContext)
-                .load(movie.mPoster)
+                .load("http://image.tmdb.org/t/p/w185" + movie.mPoster)
                 .resize(width / 2, height / 2)
                 .into(imageView);
 

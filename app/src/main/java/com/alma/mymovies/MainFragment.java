@@ -37,8 +37,9 @@ public class MainFragment extends Fragment {
         mMovieList = new ArrayList<>();
 
         if (savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
-            refreshMovies();
-        } else {
+            return;
+        }
+        else {
             mMovieList = savedInstanceState.getParcelableArrayList("movies");
         }
     }

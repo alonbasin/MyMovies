@@ -31,10 +31,15 @@ public class Movie implements Parcelable {
     public Movie(String id, String title, String poster, String overview, String releaseDate, String voteAverage) {
         mId = id;
         mTitle = title;
-        mPoster = sb.append(PosterWidth.WIDTH185).append(poster).toString();
+        mPoster = poster;
         mOverview = overview;
         mReleaseDate = releaseDate;
         mVoteAverage = voteAverage;
+    }
+
+    public String getPosterUrl() {
+        String posterUrl = sb.append(PosterWidth.WIDTH185).append(mPoster).toString();
+        return posterUrl;
     }
 
     protected Movie(Parcel in) {
@@ -77,7 +82,7 @@ public class Movie implements Parcelable {
     public String toString() {
         return "Movie{" +
                 "mId='" + mId +'\'' +
-                "mTitle='" + mTitle + '\'' +
+                ", mTitle='" + mTitle + '\'' +
                 ", mPoster='" + mPoster + '\'' +
                 ", mOverview='" + mOverview + '\'' +
                 ", mReleaseDate='" + mReleaseDate + '\'' +

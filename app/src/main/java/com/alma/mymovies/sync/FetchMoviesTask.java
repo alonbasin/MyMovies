@@ -51,8 +51,8 @@ public class FetchMoviesTask extends AsyncTask<String, Void, ArrayList<Movie>> {
         if (requestType.equals("favorites")) {
             FavoriteMoviesDbHelper dbHelper = new FavoriteMoviesDbHelper(mContext);
             ArrayList<Movie> movies = dbHelper.getAllFavoriteMovies();
-            Log.d("favoriteMoviesList", String.valueOf(movies));
             return movies;
+
         } else {
             try {
                 final String MOVIES_BASE_URL = "http://api.themoviedb.org/3/movie/";
