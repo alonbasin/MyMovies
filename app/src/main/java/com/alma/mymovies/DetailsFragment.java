@@ -1,13 +1,11 @@
 package com.alma.mymovies;
 
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,7 +22,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alma.mymovies.data.FavoriteMoviesContract;
 import com.alma.mymovies.data.FavoriteMoviesDbHelper;
 import com.alma.mymovies.sync.FetchMovieReviewsTask;
 import com.alma.mymovies.sync.FetchMovieTrailersTask;
@@ -147,7 +144,7 @@ public class DetailsFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_main_menu, menu);
+        inflater.inflate(R.menu.fragment_details_menu, menu);
     }
 
     @Override
@@ -156,6 +153,17 @@ public class DetailsFragment extends Fragment {
         if (id == R.id.action_settings) {
             startActivity(new Intent(getActivity(), SettingsActivity.class));
             return true;
+        } else if (id == R.id.action_share) {
+            if (mTrailersList.size() > 0) {
+                String trailer = mTrailersList.get(0).mTrailerUrl;
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "Check out this trailer: " + trailer);
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+            } else {
+                Toast.makeText(getActivity(), "There's no trailers!", Toast.LENGTH_SHORT).show();
+            }
         }
         return super.onOptionsItemSelected(item);
     }

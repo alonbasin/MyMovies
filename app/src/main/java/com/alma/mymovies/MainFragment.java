@@ -1,8 +1,11 @@
 package com.alma.mymovies;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -37,8 +40,9 @@ public class MainFragment extends Fragment {
         mMovieList = new ArrayList<>();
 
         if (savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
-            refreshMovies();
-        } else {
+            return;
+        }
+        else {
             mMovieList = savedInstanceState.getParcelableArrayList("movies");
         }
     }
@@ -95,7 +99,19 @@ public class MainFragment extends Fragment {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String requestType = preferences.getString("requestType", POPULAR_REQUEST);
         FetchMoviesTask moviesTask = new FetchMoviesTask(this.getActivity(), mGridAdapter);
-        moviesTask.execute(requestType);
+        if (!isNetworkAvailable()) {
+            moviesTask.execute("favorites") ;
+        } else {
+            moviesTask.execute(requestType);
+        }
+
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 }

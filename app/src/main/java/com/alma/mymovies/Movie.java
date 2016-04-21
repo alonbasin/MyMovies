@@ -8,10 +8,25 @@ import android.os.Parcelable;
  */
 public class Movie implements Parcelable {
 
+    public String mId, mTitle, mPoster, mOverview, mReleaseDate, mVoteAverage;
+
     private final String POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
     private StringBuilder sb = new StringBuilder(POSTER_BASE_URL);
 
-    public String mId, mTitle, mPoster, mOverview, mReleaseDate, mVoteAverage;
+    public enum PosterWidth {
+        WIDTH185 ("w185"),
+        WIDTH500 ("w500");
+
+        private final String posterWidth;
+
+        private PosterWidth(String s) {
+            posterWidth = s;
+        }
+
+        public String toString() {
+            return posterWidth;
+        }
+    }
 
     public Movie(String id, String title, String poster, String overview, String releaseDate, String voteAverage) {
         mId = id;
@@ -23,7 +38,8 @@ public class Movie implements Parcelable {
     }
 
     public String getPosterUrl() {
-        return sb.append(PosterWidth.WIDTH185).append(mPoster).toString();
+        String posterUrl = sb.append(PosterWidth.WIDTH185).append(mPoster).toString();
+        return posterUrl;
     }
 
     protected Movie(Parcel in) {
@@ -65,27 +81,12 @@ public class Movie implements Parcelable {
     @Override
     public String toString() {
         return "Movie{" +
-                "mId='" + mId + '\'' +
+                "mId='" + mId +'\'' +
                 ", mTitle='" + mTitle + '\'' +
                 ", mPoster='" + mPoster + '\'' +
                 ", mOverview='" + mOverview + '\'' +
                 ", mReleaseDate='" + mReleaseDate + '\'' +
-                ", mVoteAverage='" + mVoteAverage + '\'' +
+                ", mVoteAverage=" + mVoteAverage +
                 '}';
-    }
-
-    public enum PosterWidth {
-        WIDTH185 ("w185"),
-        WIDTH500 ("w500");
-
-        private final String posterWidth;
-
-        private PosterWidth(String s) {
-            posterWidth = s;
-        }
-
-        public String toString() {
-            return posterWidth;
-        }
     }
 }
