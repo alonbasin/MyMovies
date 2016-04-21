@@ -144,6 +144,12 @@ public class FetchMoviesTask extends AsyncTask<String, Void, ArrayList<Movie>> {
             Movie movie = new Movie(id, title, poster, overview, releaseDate, voteAverage);
             moviesList.add(movie);
         }
+
+        for (Movie movie:moviesList) {
+            Log.d("moviess", movie.toString());
+        }
+
+        Log.d("moviess", String.valueOf(moviesList.size()));
         return moviesList;
     }
 

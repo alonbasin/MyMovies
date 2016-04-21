@@ -30,11 +30,10 @@ public class FavoriteMoviesDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         final String SQL_CREATE_FAVORITE_MOVIES_TABLE = "CREATE TABLE " + TABLE_NAME + " (" +
-//                _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 COLUMN_ID + " TEXT NOT NULL, " +
                 COLUMN_TITLE + " TEXT NOT NULL, " +
+                COLUMN_POSTER + " TEXT NOT NULL, " +
                 COLUMN_OVERVIEW + " TEXT NOT NULL, " +
-                COLUMN_POSTER_URL + " TEXT NOT NULL, " +
                 COLUMN_RELEASE_DATE + " TEXT NOT NULL, " +
                 COLUMN_VOTE_AVERAGE + " TEXT NOT NULL " +
                 " );";
@@ -55,9 +54,8 @@ public class FavoriteMoviesDbHelper extends SQLiteOpenHelper {
 
         favoriteMovieValues.put(COLUMN_ID, id);
         favoriteMovieValues.put(COLUMN_TITLE, title);
+        favoriteMovieValues.put(COLUMN_POSTER, poster);
         favoriteMovieValues.put(COLUMN_OVERVIEW, overview);
-        String posterKey = poster;
-        favoriteMovieValues.put(COLUMN_POSTER_URL, poster);
         favoriteMovieValues.put(COLUMN_RELEASE_DATE, releaseDate);
         favoriteMovieValues.put(COLUMN_VOTE_AVERAGE, voteAverage);
 
@@ -101,12 +99,12 @@ public class FavoriteMoviesDbHelper extends SQLiteOpenHelper {
 
             String id = res.getString(res.getColumnIndex(COLUMN_ID));
             String title = res.getString(res.getColumnIndex(COLUMN_TITLE));
+            String poster = res.getString(res.getColumnIndex(COLUMN_POSTER));
             String overview = res.getString(res.getColumnIndex(COLUMN_OVERVIEW));
-            String poster = res.getString(res.getColumnIndex(COLUMN_POSTER_URL));
             String releaseDate = res.getString(res.getColumnIndex(COLUMN_RELEASE_DATE));
             String voteAverage = res.getString(res.getColumnIndex(COLUMN_VOTE_AVERAGE));
 
-            Movie movie = new Movie(id, title, overview, poster, releaseDate, voteAverage);
+            Movie movie = new Movie(id, title, poster, overview, releaseDate, voteAverage);
             movies.add(movie);
         }
 

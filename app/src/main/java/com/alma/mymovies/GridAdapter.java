@@ -2,6 +2,7 @@ package com.alma.mymovies;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -25,7 +26,6 @@ public class GridAdapter extends ArrayAdapter<Movie> {
     private int height;
     private int width;
 
-
     public GridAdapter(Context context, List<Movie> moviesList) {
         super(context, 0, moviesList);
         mContext = context;
@@ -45,7 +45,7 @@ public class GridAdapter extends ArrayAdapter<Movie> {
         }
 
         Picasso.with(mContext)
-                .load(movie.mPoster)
+                .load(movie.getPosterUrl())
                 .resize(width / 2, height / 2)
                 .into(imageView);
 
@@ -64,4 +64,5 @@ public class GridAdapter extends ArrayAdapter<Movie> {
         height = displaymetrics.heightPixels;
         width = displaymetrics.widthPixels;
     }
+
 }

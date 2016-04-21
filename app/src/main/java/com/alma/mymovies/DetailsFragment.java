@@ -69,7 +69,7 @@ public class DetailsFragment extends Fragment {
 
         mPosterImageView = (ImageView) view.findViewById(R.id.posterImageView);
         Picasso.with(getActivity())
-                .load(mMovie.mPoster)
+                .load(mMovie.getPosterUrl())
                 .resize(600, 900)
                 .into(mPosterImageView);
 
