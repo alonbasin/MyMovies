@@ -1,8 +1,11 @@
 package com.alma.mymovies;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -19,8 +22,10 @@ import com.alma.mymovies.sync.FetchMoviesTask;
 
 import java.util.ArrayList;
 
+import static android.widget.AdapterView.*;
 
-public class MainFragment extends Fragment {
+
+public class MainFragment extends Fragment{
 
     private static final String POPULAR_REQUEST = "popular";
     private static final String TOP_RATED_REQUEST = "top_rated";
@@ -28,7 +33,8 @@ public class MainFragment extends Fragment {
     private GridAdapter mGridAdapter;
     private ArrayList<Movie> mMovieList;
 
-    public MainFragment() {
+    public interface Callback {
+        void onItemSelected(Movie movie);
     }
 
     @Override
@@ -59,15 +65,12 @@ public class MainFragment extends Fragment {
         GridView gridView = (GridView) rootView.findViewById(R.id.movies_grid);
         gridView.setAdapter(mGridAdapter);
 
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gridView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                intent.putExtra("selected_movie", mMovieList.get(position));
-                startActivity(intent);
+                ((Callback) getActivity()).onItemSelected(mMovieList.get(position));
             }
         });
-
         return rootView;
     }
 
@@ -96,7 +99,19 @@ public class MainFragment extends Fragment {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String requestType = preferences.getString("requestType", POPULAR_REQUEST);
         FetchMoviesTask moviesTask = new FetchMoviesTask(this.getActivity(), mGridAdapter);
-        moviesTask.execute(requestType);
+        if (!isNetworkAvailable()) {
+            moviesTask.execute("favorites") ;
+        } else {
+            moviesTask.execute(requestType);
+        }
+
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 }

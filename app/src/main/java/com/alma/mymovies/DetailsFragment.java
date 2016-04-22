@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +33,8 @@ import java.util.ArrayList;
 
 public class DetailsFragment extends Fragment {
 
+    static final String SELECTED_MOVIE = "selected_movie";
+
     private Movie mMovie;
     protected TextView mTitleTextView, mReleaseDateTextView, mVotesTextView ,mOverviewTextView;
     protected Button mFavoriteButton;
@@ -49,13 +52,17 @@ public class DetailsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
-        Intent intent = getActivity().getIntent();
-        mMovie = intent.getParcelableExtra("selected_movie");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Bundle args = getArguments();
+        if (args != null) {
+            mMovie = args.getParcelable(DetailsFragment.SELECTED_MOVIE);
+        } else {
+            Log.d("snap", "snap");
+        }
+
         View view = inflater.inflate(R.layout.fragment_details, container, false);
 
         mReviewsLayout = (LinearLayout) view.findViewById(R.id.reviews_layout);
